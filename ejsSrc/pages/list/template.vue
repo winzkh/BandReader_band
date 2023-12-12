@@ -47,7 +47,7 @@
       </div>
     </scroll>
 
-    <div if="{{chunk1.item.length === 0 && loading === false}}"
+    <div if="{{chunk1.item.length === 0 && chunk2.item.length === 0 && loading === false}}"
          style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;justify-content: center;align-items: center">
       <text>无章节</text>
     </div>
@@ -188,6 +188,9 @@ export default {
     return tempChunks;
   },
   chunkToObjs(chunk) {
+    if (chunk === undefined) {
+      return {page: -1, item: []}
+    }
     this.$app.$def.sendLog('chunkToObjs ' + JSON.stringify({page: chunk.page, length: chunk.item.length}))
     return {
       page: chunk.page,
