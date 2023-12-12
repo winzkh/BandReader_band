@@ -66,6 +66,9 @@
                         that.listInfo(content).then()
                     }
                 }
+                if (type === "exit") {
+                    app.terminate()
+                }
                 counter++
                 this.data.emitter.emit('conn', type + ' ' + counter)
             }
