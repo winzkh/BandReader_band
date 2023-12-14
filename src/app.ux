@@ -6,6 +6,7 @@
     import mitt from 'mitt'
     import brightness from '@system.brightness'
     import sensor from '@system.sensor'
+    import app from '@system.app'
 
     let counter = 0
     let tempList = []

@@ -570,7 +570,7 @@
     },
     splitText() {
       this.wait = true;
-      this.$app.$def.sendLog("on split text set ture");
+      this.$app.$def.sendLog("on split text set ture " + this.uri);
       pages = [];
       this.page1 = {};
       this.page2 = {};
@@ -620,7 +620,7 @@
         },
         fail: function (data, code) {
           that.wait = false;
-          console.log(`handling fail, code = ${code}`);
+          that.$app.$def.sendLog(`handling fail, code = ${code}`);
         },
       });
     },

@@ -542,7 +542,7 @@ export default {
   },
   splitText() {
     this.wait = true
-    this.$app.$def.sendLog("on split text set ture")
+    this.$app.$def.sendLog("on split text set ture " + this.uri)
     pages = []
     this.page1 = {}
     this.page2 = {}
@@ -550,7 +550,6 @@ export default {
     file.readText({
       uri: this.uri,
       success: function (data) {
-
         function splitLength(text, length) {
           const result = [];
           let i = 0;
@@ -592,7 +591,7 @@ export default {
       },
       fail: function (data, code) {
         that.wait = false
-        console.log(`handling fail, code = ${code}`)
+        that.$app.$def.sendLog(`handling fail, code = ${code}`)
       }
     })
   },
