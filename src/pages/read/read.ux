@@ -425,7 +425,7 @@
             this.page1 = this.page2;
             this.page2 = pages[this.page1.page];
             this.top = height - this.wheight;
-            await this.delay();
+            await this.delay(1400);
             this.wait = false;
             this.saveOffset();
             this.changePage(this.page1.page - 1);
