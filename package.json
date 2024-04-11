@@ -11,7 +11,7 @@
     "build": "yarn compile && aiot build",
     "release": "aiot release",
     "watch": "yarn compile && aiot watch --open-nuttx",
-    "send": "yarn compile && yarn release && adb push .\\dist\\com.example.bandReader.release.1.0.5.rpk /sdcard/project ",
+    "send": "yarn compile && yarn release && adb push .\\dist\\com.example.bandReader.release.1.0.6.rpk /sdcard/project ",
     "lint": "eslint --format codeframe --fix --ext .ux,.js src/"
   },
   "devDependencies": {
