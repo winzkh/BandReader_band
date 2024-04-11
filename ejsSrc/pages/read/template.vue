@@ -268,6 +268,9 @@ export default {
         }
         this.page1 = pages[this.cpage]
         this.page2 = pages[this.cpage + 1] || []
+        if (this.page2.length === 0) {
+          this.last = true
+        }
         if (that.init) {
           return
         }
