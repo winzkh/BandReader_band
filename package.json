@@ -9,9 +9,9 @@
     "compile": "ts-node ejsSrc/index.ts",
     "start": "aiot server --watch --open-nuttx",
     "build": "yarn compile && aiot build",
-    "release": "aiot release",
+    "release": "yarn compile && aiot release",
     "watch": "yarn compile && aiot watch --open-nuttx",
-    "send": "yarn compile && yarn release && adb push ./dist/com.example.bandReader.release.1.0.6.rpk /sdcard/project ",
+    "send": "yarn compile && yarn release && adb push ./dist/com.example.bandReader.release.1.0.6.rpk /sdcard/book/com.example.bandReader.release.1.0.6.rpk",
     "lint": "eslint --format codeframe --fix --ext .ux,.js src/"
   },
   "devDependencies": {

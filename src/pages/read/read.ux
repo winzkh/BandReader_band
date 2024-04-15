@@ -282,7 +282,7 @@
           }
           this.page1 = pages[this.cpage];
           this.page2 = pages[this.cpage + 1] || [];
-          if (this.page2.length === 0) {
+          if (this.page2.page === undefined) {
             this.last = true;
           }
           if (that.init) {
@@ -403,7 +403,7 @@
         // this.stop()
         return;
       } else {
-        this.last = false;
+        if (this.page2.page !== undefined) this.last = false;
       }
       if (
         pages[this.page1.page].item.toString() ===
@@ -494,10 +494,10 @@
     nextChapter() {
       //sendlog
       const that = this;
-      prompt.showToast({
-        message: "正在加载下一章 " + this.$app.$def.data.chapters.length,
-        duration: 2000,
-      });
+      /*prompt.showToast({
+      message: '正在加载下一章 ' + this.$app.$def.data.chapters.length,
+      duration: 2000
+    })*/
       this.$app.$def.sendLog(["to next chapter ", this.index, this.chapterNum]);
       if (Number(this.index) === Number(this.chapterNum) - 1) {
         prompt.showToast({

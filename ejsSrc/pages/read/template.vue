@@ -1,7 +1,8 @@
 <template>
   <div id="page" class="demo-page" @longpress="stop">
     <div v-if="pin" id="pin" class="title" @swipe="pinSwipe">
-      <marquee scrollamount="{{24}}" loop="{{1}}" style="font-size: 38px;flex: 1;color: rgb({{color}},{{color}},{{color}});" onclick="routeHome">
+      <marquee scrollamount="{{24}}" loop="{{1}}"
+               style="font-size: 38px;flex: 1;color: rgb({{color}},{{color}},{{color}});" onclick="routeHome">
         {{ name }}
       </marquee>
       <text style="width: 14px;color: rgb({{color}},{{color}},{{color}});"></text>
@@ -259,16 +260,19 @@ export default {
         } catch (e) {
           console.log(e)
         }
-        that.$app.$def.sendLog("判断pageInfo" + JSON.stringify({infoIndex:Number(pageInfo.index),cindex:Number(this.index)}))
+        that.$app.$def.sendLog("判断pageInfo" + JSON.stringify({
+          infoIndex: Number(pageInfo.index),
+          cindex: Number(this.index)
+        }))
         if (Number(pageInfo.index) === Number(this.index)) {
           that.$app.$def.sendLog("has pageInfo:" + JSON.stringify(pageInfo))
           this.cpage = Number(pageInfo.page) || 0
-        }else {
+        } else {
           this.changePage(0)
         }
         this.page1 = pages[this.cpage]
         this.page2 = pages[this.cpage + 1] || []
-        if (this.page2.length === 0) {
+        if (this.page2.page === undefined) {
           this.last = true
         }
         if (that.init) {
@@ -319,7 +323,7 @@ export default {
   changePage(page) {
     this.cpage = page
     const that = this
-    that.$app.$def.sendLog(["触发 changePage",this.time,this.index,page])
+    that.$app.$def.sendLog(["触发 changePage", this.time, this.index, page])
     storage.set({
       key: `cpage_${this.bid}`,
       value: JSON.stringify({
@@ -327,14 +331,14 @@ export default {
         page: page
       }),
       success: function (data) {
-        that.$app.$def.sendLog(["cpage_ success",this.index,page])
+        that.$app.$def.sendLog(["cpage_ success", this.index, page])
       },
       fail: function (data, code) {
-        that.$app.$def.sendLog(["cpage_ fail",this.index,page])
+        that.$app.$def.sendLog(["cpage_ fail", this.index, page])
       }
     })
   },
-  saveOffset(back = false,exit = false) {
+  saveOffset(back = false, exit = false) {
     const that = this
     storage.set({
       key: `doffset_${that.bid}`,
@@ -390,7 +394,7 @@ export default {
       // this.stop()
       return
     } else {
-      this.last = false
+      if (this.page2.page !== undefined) this.last = false
     }
     if (pages[this.page1.page].item.toString() === pages[this.page2.page].item.toString()) {
       //sendlog
@@ -465,10 +469,10 @@ export default {
   nextChapter() {
     //sendlog
     const that = this
-    prompt.showToast({
+    /*prompt.showToast({
       message: '正在加载下一章 ' + this.$app.$def.data.chapters.length,
       duration: 2000
-    })
+    })*/
     this.$app.$def.sendLog(["to next chapter ", this.index, this.chapterNum])
     if (Number(this.index) === (Number(this.chapterNum) - 1)) {
       prompt.showToast({
@@ -565,7 +569,7 @@ export default {
         }
 
         let tempLines = data.text.split('\n')
-        that.$app.$def.sendLog('read text: ' + JSON.stringify({length:data.text.length,first:tempLines[0]}))
+        that.$app.$def.sendLog('read text: ' + JSON.stringify({length: data.text.length, first: tempLines[0]}))
         if (tempLines.length < 2) {
           tempLines = data.text.split('\r')
         }
