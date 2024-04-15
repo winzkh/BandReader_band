@@ -234,8 +234,8 @@ export default {
         }
         this.wait = true
         this.$app.$def.sendLog('chunkToObjs end---')
-        this.delay(1400).then(async () => {
-          await this.delay(100)
+        this.delay(2200).then(async () => {
+          await this.delay(600)
           this.$element(`c-${this.curChapter}`).getBoundingClientRect({
             success: (data) => {
               this.$app.$def.sendLog('to chapter success ' + JSON.stringify({id: `c-${this.curChapter}`, ...data}))

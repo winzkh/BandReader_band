@@ -366,7 +366,7 @@
         delBook(id) {
             this.data.books = this.data.books.filter(item => String(item.id) !== String(id))
             this.data.emitter.emit('add_book')
-            storage.delete({
+            /*storage.delete({
                 key: `chapter_${id}`,
                 success: function (data) {
                     console.log('handling success')
@@ -374,7 +374,7 @@
                 fail: function (data, code) {
                     console.log(`handling fail, code = ${code}`)
                 }
-            })
+            })*/
             file.rmdir({
                 uri: 'internal://files/reader/' + id,
                 recursive: true,
