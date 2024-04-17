@@ -64,13 +64,15 @@
       </text>
       <text style="width: 100%;font-size: 42px;text-align: center;margin-bottom: 24px">操作不可恢复!</text>
       <div style="width: 100%;justify-content: space-between;padding-bottom: 18px">
-        <div class="btn no" onclick="cancel">
+        <image style="height: 44px" src="/common/button.png"></image>
+        <image style="height: 44px" src="/common/button-2.png"></image>
+        <!--<div class="btn no" onclick="cancel">
           <image style="height: 44px" src="/common/x.png"></image>
         </div>
         <div style="width: 32px"></div>
         <div class="btn yes" onclick="confirm">
           <image style="height: 44px" src="/common/v.png"></image>
-        </div>
+        </div>-->
       </div>
     </div>
     <div style="position: absolute;top: 0px;left: 0px">
