@@ -518,6 +518,35 @@
       this.chunk2 = this.chunkToObjs(chunks[this.chunk2.page + 1]);
       await this.delay();
       this.wait = false;
+      try {
+        let c1 = this.chunk1[0];
+        let uri = `internal://files/reader/${this.name}/${c1.paging}/${c1.index}_${c1.name}.txt`;
+        prompt.showToast({
+          message: `查询${uri}`,
+          duration: 2000,
+        });
+        file.get({
+          uri,
+          success: function (data) {
+            prompt.showToast({
+              message: `${c1.name} 已同步`,
+              duration: 2000,
+            });
+          },
+          fail: function (data, code) {
+            // console.log(`handling fail, code = ${code}`)
+            prompt.showToast({
+              message: `${c1.name} 未同步`,
+              duration: 2000,
+            });
+          },
+        });
+      } catch (e) {
+        prompt.showToast({
+          message: "error " + e.message,
+          duration: 2000,
+        });
+      }
     },
     async onScrollTop() {
       if (this.chunk1.page === 0) {
