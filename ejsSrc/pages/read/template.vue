@@ -577,10 +577,10 @@ export default {
         tempLines = tempLines.filter(it => it.trim().length > 0)
 
         tempLines.forEach((line) => {
-          if (line.length < 200) {
+          if (line.length < 150) {
             rawLines.push(line)
           } else {
-            splitLength(line, 200).forEach(it => {
+            splitLength(line, 150).forEach(it => {
               rawLines.push(it)
             })
           }
@@ -591,12 +591,12 @@ export default {
           pages.push({
             page: page++,
             height: 0,
-            item: rawLines.splice(0, 10)
+            item: rawLines.splice(0, 8)
           })
         }
         that.initPage().then()
       },
-      fail: function (data, code) {s
+      fail: function (data, code) {
         that.wait = false
         that.$app.$def.sendLog(`handling fail, code = ${code}`)
       }

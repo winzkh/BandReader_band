@@ -16,13 +16,13 @@
       <div id="chunk1" style="flex-direction: column;width: 100%;flex-shrink: 0">
         <div for="{{chunk1.item}}" id="c-{{$item.index}}" class="item-card"
              style="align-items: flex-start;padding: 0px 0px 0px 32px;"
-             onclick="toDetail($item.index,$item.paging,$item.title,$idx)">
+             onclick="toDetail($item.index,$item.paging,$item.title,syncMap[$item.index])">
           <div style="flex: 1;padding:32px 0px 32px 0px">
             <text style="flex: 1;color:{{curChapter === $item.index ? 'rgb(163,199,218)' : 'white'}}">
               {{
                 $item.title
               }}
-              {{syncMap[$item.index?'已同步':'未同步']}}
+              {{syncMap[$item.index]?'已同步':'未同步'}}
             </text>
           </div>
           <div style="width: 90px;padding:0px 14px 0px 0px;height: 100%;justify-content: flex-end">
@@ -33,13 +33,13 @@
       <div id="chunk2" style="flex-direction: column;width: 100%;flex-shrink: 0">
         <div for="{{chunk2.item}}" id="c-{{$item.index}}" class="item-card"
              style="align-items: flex-start;padding: 0px 0px 0px 32px;"
-             onclick="toDetail($item.index,$item.paging,$item.title,$idx)">
+             onclick="toDetail($item.index,$item.paging,$item.title,syncMap[$item.index])">
           <div style="flex: 1;padding:32px 0px 32px 0px">
             <text style="flex: 1;color:{{curChapter === $item.index ? 'rgb(163,199,218)' : 'white'}}">
               {{
                 $item.title
               }}
-              {{syncMap[$item.index?'已同步':'未同步']}}
+              {{syncMap[$item.index]?'已同步':'未同步'}}
             </text>
           </div>
           <div style="width: 90px;padding:0px 14px 0px 0px;height: 100%;justify-content: flex-end">
@@ -332,15 +332,21 @@ export default {
       this.showChunk = true
     }
   },
-  toDetail(index, paging, name, idx) {
+  toDetail(index, paging, name, sync=false) {
+    if (!sync){
+      prompt.showToast({
+        message: `${name} 未同步`,
+        duration:2000
+      })
+      return;
+    }
     const that = this
     this.curChapter = index
     let uri = `internal://files/reader/${this.id}/${paging}/${index}_${name}.txt`
-    prompt.showToast({
+    /*prompt.showToast({
       message: `进入${uri}`,
       duration: 10000
-    })
-    return
+    })*/
     //sendlog
     this.$app.$def.sendLog('to detail ' + uri)
     storage.set({
