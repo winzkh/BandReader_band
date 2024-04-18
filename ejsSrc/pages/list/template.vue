@@ -22,6 +22,7 @@
               {{
                 $item.title
               }}
+              {{syncMap[$item.index?'已同步':'未同步']}}
             </text>
           </div>
           <div style="width: 90px;padding:0px 14px 0px 0px;height: 100%;justify-content: flex-end">
@@ -38,6 +39,7 @@
               {{
                 $item.title
               }}
+              {{syncMap[$item.index?'已同步':'未同步']}}
             </text>
           </div>
           <div style="width: 90px;padding:0px 14px 0px 0px;height: 100%;justify-content: flex-end">
@@ -88,6 +90,7 @@ let chunkOffset = 0
 let chunks = []
 let length = 0
 let csize = 10
+let hasCheck = false
 export default {
   // 页面级组件的数据模型，影响传入数据的覆盖机制：private内定义的属性不允许被覆盖
   private: {
@@ -115,7 +118,8 @@ export default {
     showChunk: true,
     pindex: 0,
     curChapter: 0,
-    toNum: 0
+    toNum: 0,
+    syncMap:{}
   },
   protected: {
     p: 'init',
@@ -188,6 +192,7 @@ export default {
     return tempChunks;
   },
   chunkToObjs(chunk) {
+    let that = this
     if (chunk === undefined) {
       return {page: -1, item: []}
     }
@@ -200,6 +205,41 @@ export default {
           obj = JSON.parse(item)
         } catch (e) {
           this.$app.$def.sendLog('chunkToObjs err raw=' + item + ' e: ' + e.toString())
+        }
+        // if (!hasCheck){
+        if (true){
+          try{
+            hasCheck = true
+            let uri = `internal://files/reader/${this.id}/${obj.paging}/${obj.index}_${obj.title}.txt`
+            /*prompt.showToast({
+              message: `查询${uri}`,
+              duration: 2000
+            })*/
+            file.get({
+              uri,
+              success: function(data) {
+                that.syncMap[obj.index] = true
+                /*prompt.showToast({
+                  message: `${obj.title} 已同步`,
+                  duration: 2000
+                })*/
+              },
+              fail: function(data, code) {
+                that.syncMap[obj.index] = false
+                // console.log(`handling fail, code = ${code}`)
+                /*prompt.showToast({
+                  message:`${obj.title} 未同步 code = ${code}`,
+                  duration: 2000
+                })*/
+              }
+            })
+          }catch (e) {
+            that.syncMap[obj.index] = false
+            /*prompt.showToast({
+              message: 'error ' + e.message,
+              duration: 2000
+            })*/
+          }
         }
         return obj
       }).filter(item => {
@@ -296,6 +336,11 @@ export default {
     const that = this
     this.curChapter = index
     let uri = `internal://files/reader/${this.id}/${paging}/${index}_${name}.txt`
+    prompt.showToast({
+      message: `进入${uri}`,
+      duration: 10000
+    })
+    return
     //sendlog
     this.$app.$def.sendLog('to detail ' + uri)
     storage.set({
@@ -368,35 +413,6 @@ export default {
     this.chunk2 = this.chunkToObjs(chunks[this.chunk2.page + 1])
     await this.delay()
     this.wait = false
-    try{
-      let c1 = this.chunk1[0]
-      let uri = `internal://files/reader/${this.name}/${c1.paging}/${c1.index}_${c1.name}.txt`
-      prompt.showToast({
-        message: `查询${uri}`,
-        duration: 2000
-      })
-      file.get({
-        uri,
-        success: function(data) {
-          prompt.showToast({
-            message: `${c1.name} 已同步`,
-            duration: 2000
-          })
-        },
-        fail: function(data, code) {
-          // console.log(`handling fail, code = ${code}`)
-          prompt.showToast({
-            message:`${c1.name} 未同步`,
-            duration: 2000
-          })
-        }
-      })
-    }catch (e) {
-      prompt.showToast({
-        message: 'error ' + e.message,
-        duration: 2000
-      })
-    }
   },
   async onScrollTop() {
     if (this.chunk1.page === 0) {

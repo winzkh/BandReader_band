@@ -596,7 +596,7 @@ export default {
         }
         that.initPage().then()
       },
-      fail: function (data, code) {
+      fail: function (data, code) {s
         that.wait = false
         that.$app.$def.sendLog(`handling fail, code = ${code}`)
       }
