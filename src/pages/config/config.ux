@@ -63,6 +63,39 @@
         </div>
       </div>
       <div
+          class="item-card"
+          style="justify-content: space-between; align-items: center"
+      >
+        <div style="width: 100%; flex-direction: row; align-items: center">
+          <text style="color: rgb({{color}},{{color}},{{color}});"
+          >亮度 {{ color }}</text
+          >
+          <slider
+              style="flex: 1"
+              min="100"
+              max="255"
+              step="1"
+              value="{{ initialColorValue }}"
+              onchange="onColorChange"
+          ></slider>
+        </div>
+      </div>
+      <div
+          class="item-card"
+          style="
+          height: 120px;
+          justify-content: space-between;
+          align-items: center;
+        "
+      >
+        <text>自动翻页</text>
+        <switch
+            checked="{{ config.auto }}"
+            style="height: 48px"
+            @change="onAutoChange"
+        ></switch>
+      </div>
+      <div
         class="item-card"
         style="
           height: 120px;
@@ -75,21 +108,6 @@
           checked="{{ bright }}"
           style="height: 48px"
           @change="onBrightChange"
-        ></switch>
-      </div>
-      <div
-        class="item-card"
-        style="
-          height: 120px;
-          justify-content: space-between;
-          align-items: center;
-        "
-      >
-        <text>自动翻页</text>
-        <switch
-          checked="{{ config.auto }}"
-          style="height: 48px"
-          @change="onAutoChange"
         ></switch>
       </div>
       <div

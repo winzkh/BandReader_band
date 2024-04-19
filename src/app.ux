@@ -416,6 +416,12 @@
                         if (last) {
                             // that.sendChapterSaved(index)
                             that.data.emitter.emit('chapter_saved',index)
+                          if (name.includes('第3o章两包烟')){
+                            prompt.showToast({
+                              message: `第3o章两包烟同步完成${content.length}`,
+                              duration: 2000
+                            })
+                          }
                         }
                     },
                     fail: function (data, code) {
