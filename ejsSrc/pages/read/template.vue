@@ -1,5 +1,5 @@
 <template>
-  <div id="page" class="demo-page" @longpress="stop">
+  <div id="page" class="demo-page" @longpress="toggleAuto">
     <div v-if="pin" id="pin" class="title" @swipe="pinSwipe">
       <marquee scrollamount="{{24}}" loop="{{1}}"
                style="font-size: 38px;flex: 1;color: rgb({{color}},{{color}},{{color}});" onclick="routeHome">
@@ -116,6 +116,7 @@ export default {
 
   },
   onShow() {
+    this.$app.$def.brightSwitch(true,true)
     try {
       clearInterval(timer)
     } catch (e) {
@@ -137,18 +138,7 @@ export default {
     this.$app.$def.sendLog("config " + JSON.stringify(this.config))
     this.auto = this.config.auto
     if (this.config.auto) {
-      prompt.showToast({
-        message: '长按停止自动翻页',
-        duration: 2000
-      })
-      try {
-        clearInterval(timer3)
-      } catch (e) {
-
-      }
-      timer3 = setInterval(() => {
-        this.next()
-      }, Number(this.config.autoTime) * 1000)
+      this.startAuto()
     } else {
       clearInterval(timer3)
     }
@@ -362,6 +352,7 @@ export default {
     })
   },
   onTop() {
+    this.$app.$def.brightSwitch(true,true)
     //sendlog
     this.last = false
     this.$app.$def.sendLog("onTop:" + this.page1.page + "wait:" + this.wait)
@@ -388,6 +379,7 @@ export default {
     })
   },
   onBottom() {
+    this.$app.$def.brightSwitch(true,true)
     if (this.wait) return;
     if (this.page2.page === pages[pages.length - 1].page) {
       this.last = true
@@ -435,22 +427,42 @@ export default {
     }
     this.$app.$def.sendLog("next() " + JSON.stringify({sub, size: this.size}))
   },
-  stop() {
+  startAuto(){
+    prompt.showToast({
+      message: '长按停止自动翻页',
+      duration: 2000
+    })
+    try {
+      clearInterval(timer3)
+    } catch (e) {
+
+    }
+    timer3 = setInterval(() => {
+      this.next()
+    }, Number(this.config.autoTime) * 1000)
+  },
+  toggleAuto() {
     this.press = true
     setTimeout(() => {
       this.press = false
     }, 2000)
-    if (this.config.auto === false) return;
-    if (this.config.auto) {
-      prompt.showToast({
-        message: '已停止自动翻页',
-        duration: 2000
-      })
+    if (this.config.auto === false) {
+      this.config.auto = true
+      this.auto = true
+      this.$app.$def.changeConfig(this.config)
+      this.startAuto()
+    }else{
+      if (this.config.auto) {
+        prompt.showToast({
+          message: '已停止自动翻页',
+          duration: 2000
+        })
+      }
+      this.config.auto = false
+      this.auto = false
+      this.$app.$def.changeConfig(this.config)
+      clearInterval(timer3)
     }
-    this.config.auto = false
-    this.auto = false
-    this.$app.$def.changeConfig(this.config)
-    clearInterval(timer3)
   },
   config() {
     router.push({

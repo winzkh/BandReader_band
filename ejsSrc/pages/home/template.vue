@@ -65,12 +65,12 @@
         }}
       </text>
       <div style="width: 100%;justify-content: space-between;padding-bottom: 18px;flex: 1">
-        <div class="" style="flex:1;align-items: flex-end" onclick="cancel">
-          <image style="width: 215px" src="/common/button-2.png"></image>
+        <div class="" style="flex:1;align-items: flex-end">
+          <image style="width: 215px" src="/common/button-2.png" onclick="cancel"></image>
         </div>
         <div style="width: 4px;height: 3px"></div>
-        <div class="" style="flex: 1;align-items: flex-end" onclick="confirm">
-          <image style="width: 215px" src="/common/button.png"></image>
+        <div class="" style="flex: 1;align-items: flex-end">
+          <image style="width: 215px" src="/common/button.png" onclick="confirm"></image>
         </div>
       </div>
     </div>

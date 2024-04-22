@@ -1,8 +1,8 @@
 <template>
   <div class="page-cmpt" style="padding-bottom: 24px">
     <slot name="topBar"></slot>
-    <text style="font-size: 1px">{{count}}</text>
-    <text style="font-size: 1px">{{color}}</text>
+    <text style="font-size: 1px">{{ count }}</text>
+    <text style="font-size: 1px">{{ color }}</text>
     <scroll style="width: 100%;flex: 1;flex-direction: column" scroll-y="{{true}}" scroll-top="{{top}}">
       <div class="item-card" style="justify-content: space-between;align-items: center">
         <div style="width: 100%;flex-direction: row;align-items: center">
@@ -13,13 +13,21 @@
       </div>
       <div class="item-card" style="justify-content: space-between;align-items: center">
         <div style="width: 100%;flex-direction: row;align-items: center">
-          <text style="color: rgb({{color}},{{color}},{{color}});">颜色 {{ color }}</text>
+          <text style="color: rgb({{color}},{{color}},{{color}});">颜色{{ color }}</text>
           <slider style="flex: 1" min="100" max="255" step="1" value="{{ initialColorValue }}"
                   onchange="onColorChange"></slider>
         </div>
       </div>
+      <div class="item-card" style="justify-content: space-between;align-items: center">
+        <div style="width: 100%;flex-direction: row;align-items: center">
+          <text if="{{autoLight}}" onclick="toggleMode(0)">自动亮度</text>
+          <text else onclick="toggleMode(1)">手动亮度</text>
+          <slider style="flex: 1" min="10" max="255" step="1" value="{{ initialLightValue }}"
+                  onchange="onLightChange"></slider>
+        </div>
+      </div>
       <div class="item-card" style="height: 120px;justify-content: space-between;align-items: center">
-        <text>屏幕常亮</text>
+        <text>10分钟常亮</text>
         <switch checked="{{ bright }}" style="height: 48px" @change="onBrightChange"></switch>
       </div>
       <div class="item-card" style="height: 120px;justify-content: space-between;align-items: center">
@@ -29,7 +37,8 @@
       <div class="item-card" style="justify-content: space-between;align-items: center">
         <div style="width: 100%;flex-direction: column">
           <text>翻页间隔 {{ autoTime }}秒</text>
-          <slider style="margin-top: 24px;margin-bottom: 34px;width: 100%" min="4" max="15" step="`1`" value="{{ initialTimeValue }}"
+          <slider style="margin-top: 24px;margin-bottom: 34px;width: 100%" min="4" max="15" step="`1`"
+                  value="{{ initialTimeValue }}"
                   onchange="onTimeChange"></slider>
         </div>
       </div>
@@ -52,23 +61,28 @@
 import router from '@system.router'
 import prompt from '@system.prompt'
 import storage from "@system.storage";
+import brightness from '@system.brightness'
+
 export default {
   private: {
     pageTitle: '设置',
     initialSliderValue: 54,
     initialColorValue: -1,
+    initialLightValue: 0,
     sliderValue: 54,
-    initialTimeValue:6,
-    autoTime:6,
+    initialTimeValue: 6,
+    autoTime: 6,
+    autoLight: false,
     top: 0,
     count: 0,
     size: 54,
     color: -1,
+    light: 100,
     bright: false,
     config: {
       auto: false,
       pin: true,
-      click:true,
+      click: true,
     }
   },
   onInit() {
@@ -78,10 +92,22 @@ export default {
     this.bright = this.config.bright || false
     this.initialSliderValue = this.$app.$def.data.config.size || 54
     this.size = this.initialSliderValue
-    setTimeout(()=>{
+    setTimeout(() => {
       this.initialColorValue = this.$app.$def.data.config.color || 255
       this.color = this.initialColorValue
-    },100)
+    }, 100)
+
+    brightness.getValue({
+      success: (data) => {
+        this.light = data.value
+        this.initialLightValue = data.value
+      }
+    })
+    brightness.getMode({
+      success: (data) => {
+        this.autoLight = data.mode !== 0;
+      }
+    })
   },
   onReady() {
     setInterval(() => {
@@ -89,13 +115,13 @@ export default {
     }, 1000)
     this.$app.$def.sendLog('config:' + JSON.stringify(this.config))
     storage.get({
-      key:'showedConfig',
+      key: 'showedConfig',
       success: (data) => {
         if (data == null || data === '') {
-          this.top=400
-          setTimeout(()=>{
-            this.top=0
-          },3000)
+          this.top = 400
+          setTimeout(() => {
+            this.top = 0
+          }, 3000)
           storage.set({
             key: 'showedConfig',
             value: 'true'
@@ -104,7 +130,7 @@ export default {
       }
     })
   },
-  onShow(){
+  onShow() {
 
   },
   onBackPress() {
@@ -118,7 +144,7 @@ export default {
     this.config.click = e.checked
     this.$app.$def.changeConfig(this.config)
   },
-  onLogChange(e){
+  onLogChange(e) {
     this.config.log = e.checked
     this.$app.$def.data.log = e.checked
   },
@@ -139,6 +165,39 @@ export default {
     this.color = e.progress > 255 ? 255 : e.progress
     this.config.color = e.progress > 255 ? 255 : e.progress
     // this.$app.$def.changeConfig(this.config)
+  },
+  onLightChange(e) {
+    this.light = e.progress > 255 ? 255 : e.progress
+    this.initialLightValue = e.progress
+    brightness.setValue({
+      value: Number(this.light),
+      success: function () {
+        console.log('handling success')
+      }
+    })
+  },
+  toggleMode(mode) {
+    mode = Number(mode)
+    brightness.setMode({
+      mode,
+      success: () => {
+        prompt.showToast({
+          message: `自动亮度:${mode === 0 ? '关' : '开'}`,
+          duration: 2000
+        })
+        this.autoLight = mode !== 0
+        if (mode === 1) {
+          setTimeout(() => {
+            brightness.getValue({
+              success: (data) => {
+                this.light = data.value
+                this.initialLightValue = data.value
+              }
+            })
+          },300)
+        }
+      }
+    })
   },
   onTimeChange(e) {
     this.autoTime = e.progress
