@@ -1,6 +1,6 @@
 <template>
-  <div id="page" class="demo-page" @longpress="toggleAuto">
-    <div v-if="pin" id="pin" class="title" @swipe="pinSwipe">
+  <div id="page" class="demo-page">
+    <div v-if="pin" id="pin" class="title" @swipe="pinSwipe"  @longpress="toggleAuto">
       <marquee scrollamount="{{24}}" loop="{{1}}"
                style="font-size: 38px;flex: 1;color: rgb({{color}},{{color}},{{color}});" onclick="routeHome">
         {{ name }}

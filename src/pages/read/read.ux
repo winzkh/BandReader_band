@@ -1,6 +1,12 @@
 <template>
-  <div id="page" class="demo-page" @longpress="toggleAuto">
-    <div if="{{pin}}" id="pin" class="title" @swipe="pinSwipe">
+  <div id="page" class="demo-page">
+    <div
+      if="{{pin}}"
+      id="pin"
+      class="title"
+      @swipe="pinSwipe"
+      @longpress="toggleAuto"
+    >
       <marquee
         scrollamount="{{24}}"
         loop="{{1}}"
